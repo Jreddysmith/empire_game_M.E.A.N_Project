@@ -106,7 +106,7 @@ myApp.controller('createEmpireController', function($scope, userFactory,empireFa
 		}
 		if(data.name == null){
 			$scope.messages = [];
-			$scope.messages.push("Empire's name can't be empty");
+			$scope.messages.push("Your empire's name cannot be empty! What would your army fight for?!");
 		} else {
 			data.gold = $scope.currentGold();
 			$scope.infantryPower = data.infantry * (Math.floor(Math.random() * (10 - 1)) + 1);
@@ -134,6 +134,7 @@ myApp.controller('viewEmpireController', function($scope, userFactory,empireFact
 	$scope.user = {};
 	$scope.messages=[];
 	$scope.date = new Date();
+	$scope.updates = [];
 
 	userFactory.getUser(function(data){
 		$scope.user = data;
@@ -149,91 +150,93 @@ myApp.controller('viewEmpireController', function($scope, userFactory,empireFact
 		$location.path('/viewEmpire');
 	}
 	empireFactory.viewEmpire($scope.user.empire_id, function(data){
-		console.log($scope.user.empire_id)
 		$scope.empire = data;
 		$scope.user.empire_id = $scope.empire._id;
 		$scope.passingId = (function(){
 			userFactory.passingID($scope.empire._id)
 		})();
 	})
+	empireFactory.viewUpdate(function(data){
+		$scope.updates = data;
+	})
 	$scope.adviser = function(){
 		if($scope.empire.power > 25000){
-			return("My lord, we're strong enough to crush those insects, lets attack them")
+			return("Your majesty, we are strong enough to crush them like insects, lets attack them immediately!")
 		}
 		if($scope.empire.gold > 20000){
-			return("Wow, we have too much gold, why don't we make some more by gambling")
+			return("Wow! We have a lot of gold! Why don't we go to Vegas?")
 		}
 		if($scope.empire.power < 2000 && $scope.empire.gold > 5000){
-			return("My Lord, why don't you buy some army")
+			return("Your majesty, why don't you buy some more units to build up the empire?")
 		}
 		if($scope.empire.gold < 500){
-			return("My Lord, you can buy more gold to help this empire survive. I dont want to die :(")
+			return("Your majesty, we need more gold and units in order for our empire to survive. I don't want to die :(")
 		}
 		if($scope.empire.worker >2000){
-			return("Worker, worker everywhere, lets go to work and make some gold")
+			return("There are laborers everywhere! Let's send them to work and get some gold!")
 		}
 		if($scope.empire.hero >50){
-			return("Hero everywhere, everyone can become a hero, what can Superman do????")
+			return("There are heroes everywhere! Anyone can become a hero! Where's Superman????")
 		}
 		if($scope.empire.calvary >1000){
-			return("Does anyone smell something like horsesh*t, too much Horse, I SAID TOO MUCH")
+			return("Does anyone else smell that? I think we have too many horses... It smells really bad!")
 		} else {
-			return("My Lord, why dont you do something?")
+			return("Your majesty, why don't you do something?")
 		}
 	}
 	$scope.commander = function(){
 		if($scope.empire.power>25000){
 			if($scope.empire.gold <1000){
-				return("Im ready to attack")
+				return("We're ready to attack at your command!")
 			}
 			if($scope.empire.gold >5000){
-				return("My Lord, buy more army before attacking")
+				return("Your majesty, we need to buy more units before we attack!")
 			} else {
-				return("We'ready for your order, my Lord")
+				return("We're ready to attack at your command, your majesty!")
 			}
 		}
 		if($scope.empire.power <2000){
-			return("We need to get more army")
+			return("We need more units!")
 		}
 		if($scope.empire.power<25000){
 			if($scope.empire.hero <10){
-				return("We need more hero")
+				return("We need more heroes! Where's Superman when you need him?!")
 			}
 			if($scope.empire.calvary <50){
-				return("We need more Calvary")
+				return("The calvary requests more horses!")
 			}
 			if($scope.empire.warrior <500){
-				return("We might need more Warrior")
+				return("We need more warriors! But don't call on the 2016 Golden State Warriors...")
 			}
 			if($scope.empire.knight < 1000){
-				return("More Knights can help us on the battlefield")
+				return("We need more knights in the battlefield!")
 			} else {
-				return('We need bigger army')
+				return("We're going to need a bigger army...")
 			}
 		} else {
-			return("We'ready for your order, my Lord");
+			return("We're ready for your orders, your majesty");
 		}
 	}
 	$scope.chancellor = function(){
 		if($scope.empire.gold<2000){
 			if($scope.empire.worker<500){
-				return("We need to buy more workers")
+				return("We need more laborers!")
 			}
 			if($scope.empire.worker>2000){
-				return("These workers are useless, we need more strong workers")
+				return("Mo laborers, mo problems.")
 			} else {
-				return("We need to find more gold, my Lord")
+				return("We need to find more gold, your majesty")
 			}
 		}
 		if($scope.empire.gold>2000){
 			if($scope.empire.gold<10000){
-				return("Hmm, need more gold. Please make the workers work")
+				return("Hmm, we need more gold. Make the laborers do their damn job!")
 			}
 			if($scope.empire.gold>=10000){
-				return("We have gold now, but we need more, more GOLD, more GOLD")
+				return("We have gold now, but we could always use more... MORE GOLD PLZ!")
 			}
 		} else {
-			return("We need GOLD, my LORD")
+			return("We desperately need GOLD, your majesty!!!")
 		}
 	}
 
@@ -363,7 +366,7 @@ myApp.controller('economyController', function($scope, userFactory,empireFactory
 		var totalGold =0;
 		if ((Math.floor(Math.random() * 10)) < 2){
 			$scope.empire.worker -= partialWorker * 2; 
-			$scope.messages.push("You lost "+ partialWorker * 2 + " worker(s)");	
+			$scope.messages.push("You lost "+ partialWorker * 2 + " laborers");	
 			count = 18;
 		} else {
 			count = 20;
@@ -373,7 +376,7 @@ myApp.controller('economyController', function($scope, userFactory,empireFactory
 			$scope.empire.gold += makeGold
 			totalGold += makeGold;	
 		}
-		$scope.messages.push("You made " + totalGold + " gold(s)")
+		$scope.messages.push("You made " + totalGold + " gold")
 		$scope.empire.click += 1;
 		empireFactory.makeGold($scope.empire, function(data){
 			$scope.empire = data;
@@ -387,7 +390,7 @@ myApp.controller('economyController', function($scope, userFactory,empireFactory
 		var totalGold =0;
 		if ((Math.floor(Math.random() * 10)) < 5){
 			$scope.empire.worker -= partialWorker * 10; 
-			$scope.messages.push("You lost "+ partialWorker * 10 + " worker(s)");	
+			$scope.messages.push("You lost "+ partialWorker * 10 + " laborers");	
 			count = 30;
 		} else {
 			count = 40;
@@ -397,7 +400,7 @@ myApp.controller('economyController', function($scope, userFactory,empireFactory
 			$scope.empire.gold += makeGold
 			totalGold += makeGold;	
 		}
-		$scope.messages.push("You made " + totalGold + " gold(s)")
+		$scope.messages.push("You made " + totalGold + " gold")
 		$scope.empire.click += 1;
 		empireFactory.makeGold($scope.empire, function(data){
 			$scope.empire = data;
@@ -416,20 +419,47 @@ myApp.controller('economyController', function($scope, userFactory,empireFactory
 		$scope.messages=[];
 		if ($scope.betGold == 0){
 			$scope.betGold = 1;
-			$scope.messages.push("Don't CHEAT, 1 Gold for trying");
+			$scope.messages.push("I see what you did... ;) You get 1 gold for trying, but don't cheat!");
 		}
 		var roll = Math.floor(Math.random() * (99 - 0));
 		if(roll == $scope.betNum) {
 			var winGold = $scope.betGold * 70;
-			$scope.messages.push("The number is: " + roll + ", you win: " + winGold + "Gold(s)");
+			$scope.messages.push("The number is: " + roll + ", you win: " + winGold + " Gold(s)");
 			$scope.empire.gold += winGold
 		} else {
-			$scope.messages.push("The number is: " + roll + ", you lose: " + $scope.betGold + "Gold(s)");
+			$scope.messages.push("The number is: " + roll + ", you lose: " + $scope.betGold + " Gold(s)");
 			$scope.empire.gold -= $scope.betGold;
 		}
 		empireFactory.makeGold($scope.empire, function(data){
 			$scope.empire = data;
 		})
+	}
+	$scope.foreman = function(){
+		if($scope.empire.worker == 0){
+			return ("We dont have any laborers, do you expect me to work???")
+		}
+		if($scope.empire.worker < 500){
+			return ("We need more laborers my Lord, to make gold and to sacrify ...")
+		}
+		if($scope.empire.worker > 2000){
+			return ("We have good amount of laborers, lets send them to the sea, to make gold and fed them to the shark, LIKE A BOSS")
+		} 
+		else {
+			return ("laborers, get to work, make yourself useful.")
+		}
+	}
+	$scope.adviser = function(){
+		if($scope.empire.gold > 10000){
+			return ("Lets gamble, easy way to make gold")
+		}
+		if($scope.empire.worker < 500){
+			return ("I told you, my Lord! Those laborers only good as food for the sharks")
+		}
+		if($scope.empire.gold < 3000){
+			return ("Do something, or I will tell my Lord to sacrify all of you")
+		} else {
+			return ("My Lord, you see that pretty place call Gamble right there, try it, it's fun")
+		}
 	}
 })
 
@@ -457,5 +487,194 @@ myApp.controller('rankController', function($scope, userFactory,empireFactory, $
 	empireFactory.getEmpire(function(data){
 		$scope.empireList = data;
 	})
+	$scope.adviser = function(){
+		var i = Math.floor(Math.random()*10);
+		var eName = $scope.empireList[i].name;
+		if(i > 7){
+			return ("Lets attack " + eName + " empire, we can crush them like insect");
+		}
+		if(i >= 4){
+			return ("Why don't we attack " + eName + " empire, they look weak. They're afraid of your name");
+		}
+		if(i < 4){
+			return ("Look at " + eName + " empire, attack them and take their gold please, my Lord.")
+		} else {
+			return ("Attack someone, my Lord. You need to make your name")
+		}
+	}
+})
+myApp.controller('enemyController', function($scope, userFactory,empireFactory, $routeParams, $location){
+	$scope.empire = {};
+	$scope.user = {};
+	$scope.messages=[];
+	$scope.enemy = {};
+	$scope.update = [];
+	$scope.updateNews = [];
+	var id = $routeParams.id;
+
+	userFactory.getUser(function(data){
+		$scope.user = data;
+	})
+	$scope.logout = function(){
+		$scope.user=[];
+		$location.path('/');
+	}
+	if($scope.user.length == 0 || $scope.user== "undefined"){
+		$location.path('/');
+	}
+	empireFactory.viewEmpire($scope.user.empire_id, function(data){
+		$scope.empire = data;
+	})
+	empireFactory.viewEnemy(id, function(data){
+		$scope.enemy = data;
+		console.log($scope.enemy);
+	})
+	$scope.attack = function(){
+		$scope.messages=[];
+		$scope.update = [];
+		var enemyPower = $scope.enemy.power * 1.2;
+		var myPower = $scope.empire.power;
+		if(myPower > enemyPower){
+			var dif = Math.floor(myPower/enemyPower);
+			enemyPower = enemyPower * dif;
+			var rand = Math.floor(Math.random() * (100 - 1)) + 1;
+			myPower = myPower * rand;
+			enemyPower = enemyPower * (100-rand);
+			if(myPower > enemyPower){
+				var temp = $scope.enemy.gold;
+				var deduct = Math.floor(Math.random() * (60 - 40)) + 40;
+				$scope.enemy.gold = Math.floor(($scope.enemy.gold/100)* deduct);
+				var win = temp-$scope.enemy.gold;
+				$scope.messages.push("You win " + win + " golds from your enemy but we lose some of our army as well");
+				$scope.update.push("System: " + " "  + $scope.empire.name + " of " + $scope.empire.user_name + " attack " + $scope.enemy.name + " of " + $scope.enemy.user_name + " and WIN");
+				$scope.enemy.worker = Math.floor(($scope.enemy.worker/100)* deduct);
+				$scope.enemy.infantry = Math.floor(($scope.enemy.infantry/100)* deduct);
+				$scope.enemy.archer = Math.floor(($scope.enemy.archer/100)* deduct);
+				$scope.enemy.knight = Math.floor(($scope.enemy.knight/100)* deduct);
+				$scope.enemy.warrior = Math.floor(($scope.enemy.warrior/100)* deduct);
+				$scope.enemy.calvary = Math.floor(($scope.enemy.calvary/100)* deduct);
+				$scope.enemy.hero = Math.floor(($scope.enemy.hero/100)* deduct);
+				$scope.enemy.power = Math.floor(($scope.enemy.power/100)* deduct);
+
+				$scope.empire.gold += win;
+				var deduct2 = Math.floor(Math.random() * (80 - 60)) + 60;
+				$scope.empire.infantry = Math.floor(($scope.empire.infantry/100)* deduct2);
+				$scope.empire.archer = Math.floor(($scope.empire.archer/100)* deduct2);
+				$scope.empire.knight = Math.floor(($scope.empire.knight/100)* deduct2);
+				$scope.empire.warrior = Math.floor(($scope.empire.warrior/100)* deduct2);
+				$scope.empire.calvary = Math.floor(($scope.empire.calvary/100)* deduct2);
+				$scope.empire.hero = Math.floor(($scope.empire.hero/100)* deduct2);
+				$scope.empire.power = Math.floor(($scope.empire.power/100)* deduct2);	
+			} else {
+				var temp = $scope.empire.gold;
+				var deduct = Math.floor(Math.random() * (60 - 30)) + 30;
+				$scope.empire.gold = Math.floor(($scope.empire.gold/100)* deduct);
+				var lost = temp-$scope.empire.gold;
+				$scope.messages.push("You lost " + lost + " golds to your enemy and some of our army as well");
+				$scope.update.push("System: " + " "  + $scope.empire.name + " of " + $scope.empire.user_name + " attack " + $scope.enemy.name + " of " + $scope.enemy.user_name + " and LOST");
+				$scope.empire.worker = Math.floor(($scope.empire.worker/100)* deduct);
+				$scope.empire.infantry = Math.floor(($scope.empire.infantry/100)* deduct);
+				$scope.empire.archer = Math.floor(($scope.empire.archer/100)* deduct);
+				$scope.empire.knight = Math.floor(($scope.empire.knight/100)* deduct);
+				$scope.empire.warrior = Math.floor(($scope.empire.warrior/100)* deduct);
+				$scope.empire.calvary = Math.floor(($scope.empire.calvary/100)* deduct);
+				$scope.empire.hero = Math.floor(($scope.empire.hero/100)* deduct);
+				$scope.empire.power = Math.floor(($scope.empire.power/100)* deduct);
+
+				$scope.enemy.gold += lost;
+				var deduct2 = Math.floor(Math.random() * (85 - 60)) + 60;
+				$scope.enemy.infantry = Math.floor(($scope.enemy.infantry/100)* deduct2);
+				$scope.enemy.archer = Math.floor(($scope.enemy.archer/100)* deduct2);
+				$scope.enemy.knight = Math.floor(($scope.enemy.knight/100)* deduct2);
+				$scope.enemy.warrior = Math.floor(($scope.enemy.warrior/100)* deduct2);
+				$scope.enemy.calvary = Math.floor(($scope.enemy.calvary/100)* deduct2);
+				$scope.enemy.hero = Math.floor(($scope.enemy.hero/100)* deduct2);
+				$scope.enemy.power = Math.floor(($scope.enemy.power/100)* deduct2);	
+			}
+
+		} else {
+			var dif = Math.floor(enemyPower/myPower);
+			myPower = myPower * dif;
+			var rand = Math.floor(Math.random() * (100 - 1)) + 1;
+			enemyPower = enemyPower * rand;
+			myPower = myPower * (100-rand);
+			if(myPower > enemyPower){
+				var temp = $scope.enemy.gold;
+				var deduct = Math.floor(Math.random() * (60 - 40)) + 40;
+				$scope.enemy.gold = Math.floor(($scope.enemy.gold/100)* deduct);
+				var win = temp-$scope.enemy.gold;
+				$scope.messages.push("You win " + win + " golds from your enemy but we lose some of our army as well");
+				$scope.update.push("System: " + " "  + $scope.empire.name + " of " + $scope.empire.user_name + " attack " + $scope.enemy.name + " of " + $scope.enemy.user_name + " and WIN");
+				$scope.enemy.worker = Math.floor(($scope.enemy.worker/100)* deduct);
+				$scope.enemy.infantry = Math.floor(($scope.enemy.infantry/100)* deduct);
+				$scope.enemy.archer = Math.floor(($scope.enemy.archer/100)* deduct);
+				$scope.enemy.knight = Math.floor(($scope.enemy.knight/100)* deduct);
+				$scope.enemy.warrior = Math.floor(($scope.enemy.warrior/100)* deduct);
+				$scope.enemy.calvary = Math.floor(($scope.enemy.calvary/100)* deduct);
+				$scope.enemy.hero = Math.floor(($scope.enemy.hero/100)* deduct);
+				$scope.enemy.power = Math.floor(($scope.enemy.power/100)* deduct);
+
+				$scope.empire.gold += win;
+				var deduct2 = Math.floor(Math.random() * (80 - 60)) + 60;
+				$scope.empire.infantry = Math.floor(($scope.empire.infantry/100)* deduct2);
+				$scope.empire.archer = Math.floor(($scope.empire.archer/100)* deduct2);
+				$scope.empire.knight = Math.floor(($scope.empire.knight/100)* deduct2);
+				$scope.empire.warrior = Math.floor(($scope.empire.warrior/100)* deduct2);
+				$scope.empire.calvary = Math.floor(($scope.empire.calvary/100)* deduct2);
+				$scope.empire.hero = Math.floor(($scope.empire.hero/100)* deduct2);
+				$scope.empire.power = Math.floor(($scope.empire.power/100)* deduct2);	
+			} else {
+				var temp = $scope.empire.gold;
+				var deduct = Math.floor(Math.random() * (60 - 30)) + 30;
+				$scope.empire.gold = Math.floor(($scope.empire.gold/100)* deduct);
+				var lost = temp-$scope.empire.gold;
+				$scope.messages.push("You lost " + lost + " golds to your enemy and some of our army as well");
+				$scope.update.push("System: " + " " + $scope.empire.name + " of " + $scope.empire.user_name + " attack " + $scope.enemy.name + " of " + $scope.enemy.user_name + " and LOST");
+				$scope.empire.worker = Math.floor(($scope.empire.worker/100)* deduct);
+				$scope.empire.infantry = Math.floor(($scope.empire.infantry/100)* deduct);
+				$scope.empire.archer = Math.floor(($scope.empire.archer/100)* deduct);
+				$scope.empire.knight = Math.floor(($scope.empire.knight/100)* deduct);
+				$scope.empire.warrior = Math.floor(($scope.empire.warrior/100)* deduct);
+				$scope.empire.calvary = Math.floor(($scope.empire.calvary/100)* deduct);
+				$scope.empire.hero = Math.floor(($scope.empire.hero/100)* deduct);
+				$scope.empire.power = Math.floor(($scope.empire.power/100)* deduct);
+
+				$scope.enemy.gold += lost;
+				var deduct2 = Math.floor(Math.random() * (85 - 60)) + 60;
+				$scope.enemy.infantry = Math.floor(($scope.enemy.infantry/100)* deduct2);
+				$scope.enemy.archer = Math.floor(($scope.enemy.archer/100)* deduct2);
+				$scope.enemy.knight = Math.floor(($scope.enemy.knight/100)* deduct2);
+				$scope.enemy.warrior = Math.floor(($scope.enemy.warrior/100)* deduct2);
+				$scope.enemy.calvary = Math.floor(($scope.enemy.calvary/100)* deduct2);
+				$scope.enemy.hero = Math.floor(($scope.enemy.hero/100)* deduct2);
+				$scope.enemy.power = Math.floor(($scope.enemy.power/100)* deduct2);	
+			}
+		}
+		empireFactory.updateNews($scope.update, function(data){
+			$scope.updateNews = data;
+		})
+		empireFactory.updateEmpire($scope.empire,function(data){
+			$scope.empire = data;
+		})
+		empireFactory.updateEnemy($scope.enemy,function(data){
+			$scope.enemy = data;
+		})
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 })

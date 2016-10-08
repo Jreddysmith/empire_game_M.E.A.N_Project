@@ -25,5 +25,8 @@ myApp.config(function($routeProvider){
 		templateUrl: '/partials/rank.html',
 		controller: 'rankController'
 	})
-
+	.when('/enemy/:id', {
+		templateUrl: '/partials/enemy.html',
+		controller: 'enemyController'
+	})
 })

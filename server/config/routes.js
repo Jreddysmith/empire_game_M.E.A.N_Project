@@ -10,5 +10,10 @@ module.exports = function(app){
 	app.get('/viewEmpire/:id', Empire.viewEmpire),
 	app.post('/buyArmy', Empire.buyArmy),
 	app.post('/makeGold', Empire.makeGold),
-	app.get('/getEmpire', Empire.getEmpire)
+	app.get('/getEmpire', Empire.getEmpire),
+	app.get('/viewEnemy/:id', Empire.viewEnemy),
+	app.post('/updateEmpire', Empire.updateEmpire),
+	app.post('/updateEnemy', Empire.updateEnemy),
+	app.post('/updateNews', Empire.updateNews),
+	app.get('/viewUpdate', Empire.viewUpdate)
 }
